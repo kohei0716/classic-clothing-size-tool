@@ -90,7 +90,7 @@
     cursor: pointer;
   }
   .go:active { opacity: 0.85; }
-  .hidden { display: none; }
+  .hidden, .spec-table.hidden { display: none; }
 
   .result {
     margin-top: 28px;
@@ -320,6 +320,7 @@
       specEl.innerHTML = spec.map(([k, v]) => `<div class="k">${k}</div><div class="v">${v}</div>`).join("");
       specEl.classList.remove("hidden");
     } else {
+      specEl.innerHTML = "";
       specEl.classList.add("hidden");
     }
     $("result").classList.add("show");
