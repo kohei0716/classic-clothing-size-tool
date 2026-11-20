@@ -8,13 +8,11 @@
 <style>
   :root {
     --bg: #ffffff;
-    --panel: #f6f6f4;
-    --ink: #111111;
-    --sub: #6b6b6b;
-    --accent: #111111;
-    --accent-ink: #ffffff;
-    --border: #dcdcd8;
+    --ink: #0d0d0d;
+    --sub: #767676;
+    --soft: #dededa;
     --error: #b3261e;
+    --cond: "Arial Narrow", "Helvetica Neue Condensed", "Helvetica Neue", "Yu Gothic", sans-serif;
   }
   * { box-sizing: border-box; }
   body {
@@ -22,142 +20,178 @@
     background: var(--bg);
     color: var(--ink);
     font-family: "Hiragino Sans", "Yu Gothic", "Helvetica Neue", sans-serif;
-    padding: 24px 16px 40px;
+    padding: 28px 20px 56px;
   }
-  .wrap { width: 100%; max-width: 460px; margin: 0 auto; }
-  .condensed { font-family: "Arial Narrow", "Helvetica Neue Condensed", "Yu Gothic", sans-serif; }
+  .wrap { width: 100%; max-width: 440px; margin: 0 auto; }
+
+  /* ヘッダー */
+  .rule { height: 3px; background: var(--ink); margin-bottom: 12px; }
   .eyebrow {
-    font-family: "Arial Narrow", "Helvetica Neue Condensed", "Yu Gothic", sans-serif;
+    font-family: var(--cond);
     font-weight: 800;
-    font-size: 0.72rem;
-    letter-spacing: 0.22em;
-    color: var(--sub);
+    font-size: 0.7rem;
+    letter-spacing: 0.32em;
+    color: var(--ink);
     text-transform: uppercase;
   }
-  h1 { font-size: 1.35rem; margin: 6px 0 4px; letter-spacing: 0.02em; text-wrap: balance; }
-  .subtitle { font-size: 0.82rem; color: var(--sub); margin-bottom: 18px; line-height: 1.6; }
+  h1 { font-size: 2rem; margin: 14px 0 6px; font-weight: 800; letter-spacing: 0.06em; line-height: 1.2; }
+  .subtitle { font-size: 0.8rem; color: var(--sub); margin-bottom: 28px; line-height: 1.7; }
 
-  .tabs { display: flex; border-bottom: 1px solid var(--border); margin-bottom: 4px; }
+  /* タブ(選択中を黒ベタ) */
+  .tabs { display: grid; grid-template-columns: repeat(3, 1fr); border: 1.5px solid var(--ink); margin-bottom: 8px; }
   .tab {
-    flex: 1;
     margin: 0;
-    padding: 12px 4px;
-    background: none;
+    padding: 14px 4px 12px;
+    background: var(--bg);
     border: none;
-    border-bottom: 2px solid transparent;
+    border-right: 1.5px solid var(--ink);
     border-radius: 0;
-    color: var(--sub);
+    color: var(--ink);
     font-family: inherit;
-    font-size: 0.92rem;
-    font-weight: 600;
-    letter-spacing: 0.04em;
+    font-size: 0.8rem;
+    font-weight: 700;
+    letter-spacing: 0.1em;
     cursor: pointer;
-    margin-bottom: -1px;
+    display: flex; flex-direction: column; align-items: center; gap: 8px;
   }
-  .tab[aria-selected="true"] { color: var(--ink); border-bottom-color: var(--ink); }
-  .tab { display: flex; flex-direction: column; align-items: center; gap: 6px; }
-  .tab svg { width: 36px; height: 28px; fill: none; stroke: currentColor; stroke-width: 1.8; stroke-linejoin: round; stroke-linecap: round; }
+  .tab:last-child { border-right: none; }
+  .tab[aria-selected="true"] { background: var(--ink); color: var(--bg); }
+  .tab svg { width: 36px; height: 28px; fill: none; stroke: currentColor; stroke-width: 1.6; stroke-linejoin: round; stroke-linecap: round; }
 
-  label { display: block; font-size: 0.85rem; color: var(--sub); margin-bottom: 6px; margin-top: 20px; }
+  /* 入力(下線のみ) */
+  label {
+    display: block;
+    font-size: 0.72rem;
+    font-weight: 700;
+    letter-spacing: 0.14em;
+    color: var(--sub);
+    margin-top: 28px;
+  }
   input[type="number"], select {
     width: 100%;
-    padding: 12px;
-    font-size: 16px; /* iOSの自動ズーム防止 */
-    font-family: inherit;
+    padding: 10px 0 9px;
+    font-size: 1.5rem; /* 16px以上: iOSの自動ズーム防止 */
+    font-weight: 700;
+    font-family: var(--cond);
     font-variant-numeric: tabular-nums;
-    border: 1px solid var(--border);
-    border-radius: 4px;
+    letter-spacing: 0.02em;
+    border: none;
+    border-bottom: 1.5px solid var(--ink);
+    border-radius: 0;
     background: var(--bg);
     color: var(--ink);
+    outline: none;
   }
-  input[type="number"].invalid { border-color: var(--error); }
-  input[type="number"]:focus-visible, select:focus-visible, button:focus-visible {
-    outline: 2px solid var(--ink);
-    outline-offset: 2px;
+  input[type="number"]::placeholder { color: #c4c4c0; font-weight: 400; }
+  input[type="number"]:focus, select:focus { border-bottom-width: 4px; padding-bottom: 6px; }
+  input[type="number"].invalid { border-bottom-color: var(--error); }
+  select {
+    font-size: 1rem;
+    font-weight: 600;
+    font-family: inherit;
+    appearance: none;
+    -webkit-appearance: none;
+    padding-right: 28px;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='14' height='9' viewBox='0 0 14 9'%3E%3Cpath d='M1 1l6 6 6-6' fill='none' stroke='%230d0d0d' stroke-width='1.8'/%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: right 2px center;
   }
-  .error { display: none; margin-top: 12px; font-size: 0.85rem; color: var(--error); }
+  button:focus-visible { outline: 3px solid var(--ink); outline-offset: 3px; }
+  .error { display: none; margin-top: 16px; font-size: 0.85rem; font-weight: 700; color: var(--error); }
   .error.show { display: block; }
   .go {
-    margin-top: 24px;
+    margin-top: 36px;
     width: 100%;
-    padding: 15px;
-    font-family: "Arial Narrow", "Helvetica Neue Condensed", "Yu Gothic", sans-serif;
-    font-size: 0.95rem;
+    padding: 19px;
+    font-family: var(--cond);
+    font-size: 1rem;
     font-weight: 800;
-    letter-spacing: 0.14em;
-    background: var(--accent);
-    color: var(--accent-ink);
+    letter-spacing: 0.34em;
+    text-indent: 0.34em;
+    background: var(--ink);
+    color: var(--bg);
     border: none;
-    border-radius: 4px;
+    border-radius: 0;
     cursor: pointer;
   }
-  .go:active { opacity: 0.85; }
+  .go::after { content: "  →"; letter-spacing: 0; }
+  .go:active { opacity: 0.8; }
   .hidden { display: none; }
 
+  /* 結果(黒いハンドタグ) */
   .result {
-    margin-top: 28px;
-    padding: 22px;
-    border-radius: 4px;
-    background: var(--panel);
-    border: 1px solid var(--border);
+    position: relative;
+    margin-top: 40px;
+    padding: 46px 24px 26px;
+    background: var(--ink);
+    color: var(--bg);
+    clip-path: polygon(0 0, calc(100% - 22px) 0, 100% 22px, 100% 100%, 0 100%);
     display: none;
   }
-  .result.show { display: flex; flex-direction: column; gap: 8px; animation: fadein 0.25s ease-out; }
-  @media (prefers-reduced-motion: reduce) { .result.show { animation: none; } }
-  @keyframes fadein { from { opacity: 0; transform: translateY(4px); } to { opacity: 1; transform: translateY(0); } }
+  .result::before {
+    content: "";
+    position: absolute;
+    top: 16px; left: 24px;
+    width: 12px; height: 12px;
+    border-radius: 50%;
+    background: var(--bg);
+  }
+  .result.show { display: flex; flex-direction: column; gap: 10px; }
+  .result.show .main-size { animation: rise 0.45s cubic-bezier(.2,.7,.2,1); }
+  @media (prefers-reduced-motion: reduce) { .result.show .main-size { animation: none; } }
+  @keyframes rise { from { opacity: 0; transform: translateY(14px); } to { opacity: 1; transform: translateY(0); } }
   .result .label {
-    font-family: "Arial Narrow", "Helvetica Neue Condensed", "Yu Gothic", sans-serif;
-    font-size: 0.72rem;
-    letter-spacing: 0.18em;
-    color: var(--sub);
+    font-family: var(--cond);
+    font-size: 0.68rem;
+    font-weight: 700;
+    letter-spacing: 0.24em;
+    color: #a8a8a8;
   }
   .result .main-size {
-    font-family: "Arial Narrow", "Helvetica Neue Condensed", "Yu Gothic", sans-serif;
-    font-size: 3.4rem;
-    font-weight: 800;
-    letter-spacing: 0.04em;
-    line-height: 1;
+    font-family: var(--cond);
+    font-size: 7rem;
+    font-weight: 900;
+    letter-spacing: -0.01em;
+    line-height: 0.95;
+    margin: 4px 0 6px;
   }
-  .note { font-size: 0.88rem; line-height: 1.7; }
-  .note.alt { color: var(--sub); }
-  .scale { display: flex; gap: 6px; margin-top: 8px; }
+  .note { font-size: 0.88rem; line-height: 1.75; }
+  .note.alt { color: #a8a8a8; }
+  .fit-chips { display: none; gap: 8px; flex-wrap: wrap; margin-top: 4px; }
+  .chip {
+    display: flex; align-items: baseline; gap: 6px;
+    padding: 7px 14px;
+    border: 1px solid #5a5a5a;
+    border-radius: 999px;
+  }
+  .chip-primary { background: var(--bg); border-color: var(--bg); }
+  .chip-label { font-size: 0.74rem; color: #a8a8a8; letter-spacing: 0.03em; }
+  .chip-size { font-family: var(--cond); font-weight: 800; font-size: 0.95rem; color: var(--bg); }
+  .chip-primary .chip-label { color: #555; }
+  .chip-primary .chip-size { color: var(--ink); }
+  .scale { display: flex; gap: 6px; margin-top: 14px; }
   .scale .cell {
     flex: 1; text-align: center; padding: 10px 0;
-    border: 1px solid var(--border); border-radius: 4px;
-    background: var(--bg); color: var(--sub);
-    font-family: "Arial Narrow", "Helvetica Neue Condensed", "Yu Gothic", sans-serif;
+    border: 1px solid #5a5a5a;
+    color: #a8a8a8;
+    font-family: var(--cond);
     font-weight: 800; font-size: 0.92rem;
   }
-  .scale .cell.on { background: var(--ink); border-color: var(--ink); color: var(--accent-ink); }
-  .scale .cell.alt { border: 1px dashed var(--ink); color: var(--ink); }
-  .scale-note { font-size: 0.74rem; color: var(--sub); }
-  .guide { margin-top: 12px; text-align: center; }
+  .scale .cell.on { background: var(--bg); border-color: var(--bg); color: var(--ink); }
+  .scale .cell.alt { border: 1px dashed var(--bg); color: var(--bg); }
+  .scale-note { font-size: 0.74rem; color: #a8a8a8; }
+
+  /* ボトムスのウエスト位置 */
+  .guide { margin-top: 18px; text-align: center; }
   .guide svg { display: block; width: 100%; max-width: 150px; height: auto; margin: 0 auto; }
   .guide .g { fill: var(--bg); stroke: var(--ink); stroke-width: 1.5; stroke-linejoin: round; }
   .guide .m { fill: none; stroke: #c0392b; stroke-width: 3; stroke-dasharray: 6 4; }
   .guide .t { font-size: 24px; font-weight: 700; fill: #c0392b; text-anchor: middle; }
-  .chip {
-    display: flex;
-    align-items: baseline;
-    gap: 6px;
-    padding: 7px 14px;
-    border: 1px solid var(--border);
-    border-radius: 999px;
-    background: var(--bg);
-  }
-  .chip-primary { border-color: var(--ink); background: var(--ink); }
-  .chip-label { font-size: 0.74rem; color: var(--sub); letter-spacing: 0.03em; }
-  .chip-size {
-    font-family: "Arial Narrow", "Helvetica Neue Condensed", "Yu Gothic", sans-serif;
-    font-weight: 800;
-    font-size: 0.92rem;
-  }
-  .chip-primary .chip-label { color: #cfcfcf; }
-  .chip-primary .chip-size { color: var(--accent-ink); }
 </style>
 </head>
 <body>
 <div class="wrap">
+  <div class="rule"></div>
   <div class="eyebrow">Classic clothing — Size Guide</div>
   <h1>サイズ診断</h1>
   <div class="subtitle">アイテムを選んで、おすすめのサイズをご案内します。</div>
