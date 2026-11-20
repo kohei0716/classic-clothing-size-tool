@@ -291,10 +291,6 @@
     return WEIGHT_CHART[WEIGHT_CHART.length - 1];
   }
 
-  function nextSize(size) {
-    return SIZE_ORDER[Math.min(SIZE_ORDER.indexOf(size) + 1, SIZE_ORDER.length - 1)];
-  }
-
   // 範囲外(Sより下・XXLより上)は null を返す
   function neighborSize(size, delta) {
     const idx = SIZE_ORDER.indexOf(size) + delta;
@@ -357,7 +353,9 @@
       return `<div class="g-title">体重 × サイズの目安</div>
         <div class="g-marker-row"><div class="g-marker" style="left:${pos}%">あなた ${g.value}kg</div></div>
         <div class="g-track">${segs}</div><div class="g-ticks">${ticks}</div>
-        <div class="g-cap">体重 ${g.value}kg は、${primary} の目安(${range})に入っています。</div>`;
+        <div class="g-cap">${g.overridden
+          ? `体重 ${g.value}kg だけなら ${r.size}(${range}・点線)ですが、身長 ${g.height}cm が ${r.size} の目安上限(${g.heightMax}cm)を超えるため、${primary} が基準になります。`
+          : `体重 ${g.value}kg は、${primary} の目安(${range})に入っています。`}</div>`;
     }
     const A = 66, B = 102, r = g.row;
     const pos = Math.max(6, Math.min(94, pct(g.value, A, B)));
@@ -427,13 +425,22 @@
     if (!weight) missing.push("weight");
     if (missing.length) { showError("身長と体重を入力してください。", missing); return; }
 
-    const row = sizeByWeight(weight);
+    // 基本は体重で判定。身長が体重基準サイズの目安上限を超えた場合は、身長基準で選ぶ
+    const weightRow = sizeByWeight(weight);
+    let row = weightRow;
+    if (height > weightRow.heightMax) {
+      row = WEIGHT_CHART.find(r => r.heightMax >= height) || WEIGHT_CHART[WEIGHT_CHART.length - 1];
+    }
     const primary = row.size;
-    const altSize = height > row.heightMax ? nextSize(primary) : null;
-    const note = (altSize && altSize !== primary)
-      ? `体重(${weight}kg)からは ${primary} が基準ですが、身長(${height}cm)が ${primary} の目安上限(${row.heightMax}cm)を超えています。着丈にゆとりが欲しい場合は ${altSize} も候補です。`
+    const overridden = row !== weightRow;
+    const note = overridden
+      ? `体重(${weight}kg)だけなら ${weightRow.size} ですが、身長(${height}cm)が ${weightRow.size} の目安上限(${weightRow.heightMax}cm)を超えているため、身長に合わせて ${primary} をおすすめします。`
       : `体重・身長ともに ${primary} の範囲内です。`;
-    render({ primary, note, usual, alt: (altSize && altSize !== primary) ? altSize : null, gauge: { kind: "weight", value: weight, row } });
+    render({
+      primary, note, usual,
+      alt: overridden ? weightRow.size : null,
+      gauge: { kind: "weight", value: weight, row: weightRow, overridden, height, heightMax: weightRow.heightMax }
+    });
   }
 
   document.querySelectorAll(".tab").forEach(t =>
