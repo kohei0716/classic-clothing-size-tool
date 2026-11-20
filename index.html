@@ -55,6 +55,8 @@
     margin-bottom: -1px;
   }
   .tab[aria-selected="true"] { color: var(--ink); border-bottom-color: var(--ink); }
+  .tab { display: flex; flex-direction: column; align-items: center; gap: 6px; }
+  .tab svg { width: 36px; height: 28px; fill: none; stroke: currentColor; stroke-width: 1.8; stroke-linejoin: round; stroke-linecap: round; }
 
   label { display: block; font-size: 0.85rem; color: var(--sub); margin-bottom: 6px; margin-top: 20px; }
   input[type="number"], select {
@@ -90,7 +92,7 @@
     cursor: pointer;
   }
   .go:active { opacity: 0.85; }
-  .hidden, .spec-table.hidden { display: none; }
+  .hidden { display: none; }
 
   .result {
     margin-top: 28px;
@@ -118,26 +120,22 @@
   }
   .note { font-size: 0.88rem; line-height: 1.7; }
   .note.alt { color: var(--sub); }
-  .spec-table {
-    margin-top: 4px;
-    border-top: 1px solid var(--border);
-    padding-top: 12px;
-    display: grid;
-    grid-template-columns: 1fr auto;
-    row-gap: 4px;
-    font-size: 0.85rem;
+  .scale { display: flex; gap: 6px; margin-top: 8px; }
+  .scale .cell {
+    flex: 1; text-align: center; padding: 10px 0;
+    border: 1px solid var(--border); border-radius: 4px;
+    background: var(--bg); color: var(--sub);
+    font-family: "Arial Narrow", "Helvetica Neue Condensed", "Yu Gothic", sans-serif;
+    font-weight: 800; font-size: 0.92rem;
   }
-  .spec-table .k { color: var(--sub); }
-  .spec-table .v { text-align: right; font-variant-numeric: tabular-nums; }
-  .diagram { margin-top: 4px; border-top: 1px solid var(--border); padding-top: 12px; }
-  .diagram .cap { font-size: 0.72rem; letter-spacing: 0.12em; color: var(--sub); margin-bottom: 8px; }
-  .diagram svg { display: block; width: 100%; max-width: 240px; height: auto; margin: 0 auto; }
-  .diagram .g { fill: var(--bg); stroke: var(--ink); stroke-width: 1.5; stroke-linejoin: round; }
-  .diagram .d { fill: none; stroke: var(--ink); stroke-width: 1; }
-  .diagram .m { fill: none; stroke: #c0392b; stroke-width: 1.4; stroke-dasharray: 4 3; }
-  .diagram .t { font-size: 11px; font-weight: 700; fill: #c0392b; text-anchor: middle;
-                paint-order: stroke; stroke: var(--bg); stroke-width: 3px; stroke-linejoin: round; }
-  .fit-chips { display: none; gap: 8px; flex-wrap: wrap; margin-top: 4px; }
+  .scale .cell.on { background: var(--ink); border-color: var(--ink); color: var(--accent-ink); }
+  .scale .cell.alt { border: 1px dashed var(--ink); color: var(--ink); }
+  .scale-note { font-size: 0.74rem; color: var(--sub); }
+  .guide { margin-top: 12px; text-align: center; }
+  .guide svg { display: block; width: 100%; max-width: 150px; height: auto; margin: 0 auto; }
+  .guide .g { fill: var(--bg); stroke: var(--ink); stroke-width: 1.5; stroke-linejoin: round; }
+  .guide .m { fill: none; stroke: #c0392b; stroke-width: 3; stroke-dasharray: 6 4; }
+  .guide .t { font-size: 24px; font-weight: 700; fill: #c0392b; text-anchor: middle; }
   .chip {
     display: flex;
     align-items: baseline;
@@ -165,9 +163,9 @@
   <div class="subtitle">アイテムを選んで、おすすめのサイズをご案内します。</div>
 
   <div class="tabs" role="tablist" aria-label="アイテム">
-    <button class="tab" role="tab" id="tab-tee" data-type="tee" aria-selected="true">Tシャツ</button>
-    <button class="tab" role="tab" id="tab-bottoms" data-type="bottoms" aria-selected="false">ボトムス</button>
-    <button class="tab" role="tab" id="tab-outer" data-type="outer" aria-selected="false">アウター</button>
+    <button class="tab" role="tab" id="tab-tee" data-type="tee" aria-selected="true"><svg viewBox="0 0 40 32" aria-hidden="true"><path d="M12 4 L20 7 L28 4 L38 10 L33 17 L29 15 L29 30 L11 30 L11 15 L7 17 L2 10 Z"/></svg>Tシャツ</button>
+    <button class="tab" role="tab" id="tab-bottoms" data-type="bottoms" aria-selected="false"><svg viewBox="0 0 40 32" aria-hidden="true"><path d="M12 2 H28 L30 30 H22 L20 12 L18 30 H10 Z"/></svg>ボトムス</button>
+    <button class="tab" role="tab" id="tab-outer" data-type="outer" aria-selected="false"><svg viewBox="0 0 40 32" aria-hidden="true"><path d="M12 3 L20 6 L28 3 L38 9 L36 28 L31 28 L30 16 L30 30 L10 30 L10 16 L9 28 L4 28 L2 9 Z"/><path d="M20 6 V30"/></svg>アウター</button>
   </div>
 
   <div id="bodyFields">
@@ -181,6 +179,12 @@
   <div id="waistFields" class="hidden">
     <label for="waist">ウエスト実寸(cm)</label>
     <input type="number" id="waist" inputmode="decimal" placeholder="例: 80">
+    <div class="guide" aria-hidden="true">
+      <svg viewBox="0 0 240 200"><g transform="translate(20 0)">
+        <path class="g" d="M62 30 L138 30 L146 184 L108 184 L100 76 L92 184 L54 184 Z"/>
+        <path class="m" d="M62 30 H138"/><text class="t" x="100" y="20">ウエスト</text>
+      </g></svg>
+    </div>
   </div>
 
   <label for="usual" id="usualLabel">普段Tシャツで着ているサイズ(任意)</label>
@@ -203,8 +207,8 @@
     <div class="note" id="note"></div>
     <div class="note alt" id="altNote"></div>
     <div class="fit-chips" id="fitChips"></div>
-    <div class="spec-table hidden" id="specTable"></div>
-    <div class="diagram" id="diagram"></div>
+    <div class="scale" id="scale" aria-hidden="true"></div>
+    <div class="scale-note" id="scaleNote"></div>
   </div>
 </div>
 
@@ -233,38 +237,6 @@
     tee:     { kind: "body",  usualLabel: "普段Tシャツで着ているサイズ(任意)",       resultLabel: "おすすめサイズ(体重ベース)" },
     bottoms: { kind: "waist", usualLabel: "普段穿いているボトムスのサイズ(任意)",     resultLabel: "おすすめサイズ(ウエスト実寸ベース)" },
     outer:   { kind: "body",  usualLabel: "普段アウターで着ているサイズ(任意)",       resultLabel: "おすすめサイズ(体重ベース)" }
-  };
-
-  // 採寸位置のイラスト(目安の図。数値は入れない)
-  const MARKER = `<defs><marker id="tick" markerWidth="6" markerHeight="6" refX="3" refY="3" orient="auto"><path d="M3 0V6" stroke="#c0392b" stroke-width="1.4"/></marker></defs>`;
-  const M = `marker-start="url(#tick)" marker-end="url(#tick)"`;
-  const DIAGRAMS = {
-    tee: `<svg viewBox="0 0 240 200" role="img" aria-label="Tシャツの採寸位置:着丈・身幅・肩幅・袖丈">${MARKER}
-      <g transform="translate(20 0)">
-        <path class="g" d="M70 34 L100 42 L130 34 L170 56 L152 86 L138 78 L138 172 L62 172 L62 78 L48 86 L30 56 Z"/>
-        <path class="d" d="M86 36 Q100 52 114 36"/>
-        <path class="m" d="M100 44 V172" ${M}/><text class="t" x="100" y="146">着丈</text>
-        <path class="m" d="M62 112 H138" ${M}/><text class="t" x="100" y="106">身幅</text>
-        <path class="m" d="M70 24 H130" ${M}/><text class="t" x="100" y="18">肩幅</text>
-        <path class="m" d="M136 30 L176 52" ${M}/><text class="t" x="172" y="42">袖丈</text>
-      </g></svg>`,
-    outer: `<svg viewBox="0 0 240 200" role="img" aria-label="アウターの採寸位置:着丈・身幅・肩幅・袖丈">${MARKER}
-      <g transform="translate(20 0)">
-        <path class="g" d="M68 32 L100 40 L132 32 L172 54 L166 156 L148 156 L142 86 L142 174 L58 174 L58 86 L52 156 L34 156 L28 54 Z"/>
-        <path class="d" d="M84 34 L100 60 L116 34 M100 60 V174"/>
-        <path class="m" d="M122 42 V174" ${M}/><text class="t" x="122" y="150">着丈</text>
-        <path class="m" d="M58 112 H142" ${M}/><text class="t" x="100" y="106">身幅</text>
-        <path class="m" d="M68 24 H132" ${M}/><text class="t" x="100" y="18">肩幅</text>
-        <path class="m" d="M138 28 L178 50 L172 156" ${M}/><text class="t" x="186" y="104">袖丈</text>
-      </g></svg>`,
-    bottoms: `<svg viewBox="0 0 240 200" role="img" aria-label="ボトムスの採寸位置:ウエスト・ヒップ・総丈・股下">${MARKER}
-      <g transform="translate(20 0)">
-        <path class="g" d="M62 30 L138 30 L146 184 L108 184 L100 76 L92 184 L54 184 Z"/>
-        <path class="m" d="M62 22 H138" ${M}/><text class="t" x="100" y="14">ウエスト</text>
-        <path class="m" d="M60 62 H140" ${M}/><text class="t" x="100" y="56">ヒップ</text>
-        <path class="m" d="M160 30 V184" ${M}/><text class="t" x="176" y="110">総丈</text>
-        <path class="m" d="M80 82 V184" ${M}/><text class="t" x="80" y="140">股下</text>
-      </g></svg>`
   };
 
   let currentType = "tee";
@@ -325,7 +297,7 @@
   }
 
   // 診断結果(共通部分)を描画する
-  function render({ primary, note, usual, spec }) {
+  function render({ primary, note, usual, alt }) {
     $("resultLabel").textContent = TYPES[currentType].resultLabel;
     $("mainSize").textContent = primary;
     $("note").textContent = note;
@@ -356,15 +328,9 @@
     }
     $("altNote").textContent = altNote;
 
-    const specEl = $("specTable");
-    if (spec) {
-      specEl.innerHTML = spec.map(([k, v]) => `<div class="k">${k}</div><div class="v">${v}</div>`).join("");
-      specEl.classList.remove("hidden");
-    } else {
-      specEl.innerHTML = "";
-      specEl.classList.add("hidden");
-    }
-    $("diagram").innerHTML = `<div class="cap">採寸位置の目安</div>${DIAGRAMS[currentType]}`;
+    $("scale").innerHTML = SIZE_ORDER.map(sz =>
+      `<div class="cell${sz === primary ? " on" : sz === alt ? " alt" : ""}">${sz}</div>`).join("");
+    $("scaleNote").textContent = alt ? "点線は、着丈にゆとりが欲しい場合の候補です。" : "";
     $("result").classList.add("show");
   }
 
@@ -380,10 +346,7 @@
       const note = inRange
         ? `ウエスト実寸(${waist}cm)は ${row.size} の目安範囲(${row.waistMin}〜${row.waistMax}cm)内です。`
         : `ウエスト実寸(${waist}cm)は ${row.size} の目安範囲(${row.waistMin}〜${row.waistMax}cm)からやや外れていますが、最も近いサイズとして ${row.size} を推奨します。`;
-      render({
-        primary: row.size, note, usual,
-        spec: [["総丈", `${row.totalLength}cm`], ["ヒップ", `${row.hip}cm`], ["股下", `${row.inseam}cm`]]
-      });
+      render({ primary: row.size, note, usual, alt: null });
       return;
     }
 
@@ -400,7 +363,7 @@
     const note = (altSize && altSize !== primary)
       ? `体重(${weight}kg)からは ${primary} が基準ですが、身長(${height}cm)が ${primary} の目安上限(${row.heightMax}cm)を超えています。着丈にゆとりが欲しい場合は ${altSize} も候補です。`
       : `体重・身長ともに ${primary} の範囲内です。`;
-    render({ primary, note, usual, spec: null });
+    render({ primary, note, usual, alt: (altSize && altSize !== primary) ? altSize : null });
   }
 
   document.querySelectorAll(".tab").forEach(t =>
