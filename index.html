@@ -7,193 +7,200 @@
 <title>Classic clothing サイズ診断</title>
 <style>
   :root {
-    --bg: #ffffff;
-    --ink: #0d0d0d;
-    --sub: #767676;
-    --soft: #dededa;
-    --error: #b3261e;
+    --page: #ffffff;
+    --paper: #f3ecda;
+    --paper-d: #e9dfc6;
+    --ink: #2b2118;
+    --sub: #7b6c57;
+    --red: #8f2d22;
+    --stitch: #b3a278;
+    --line: #cfc19b;
+    --error: #a4281d;
+    --serif: "Hiragino Mincho ProN", "Yu Mincho", "Noto Serif JP", "Noto Serif CJK JP", serif;
     --cond: "Arial Narrow", "Helvetica Neue Condensed", "Helvetica Neue", "Yu Gothic", sans-serif;
   }
   * { box-sizing: border-box; }
   body {
     margin: 0;
-    background: var(--bg);
+    background: var(--page);
     color: var(--ink);
     font-family: "Hiragino Sans", "Yu Gothic", "Helvetica Neue", sans-serif;
-    padding: 28px 20px 56px;
+    padding: 28px 14px 56px;
   }
-  .wrap { width: 100%; max-width: 440px; margin: 0 auto; }
 
-  /* ヘッダー */
-  .rule { height: 3px; background: var(--ink); margin-bottom: 12px; }
+  /* 全体=ヴィンテージのハンドタグ(生成り・縫い目・穴) */
+  .wrap {
+    position: relative;
+    width: 100%;
+    max-width: 440px;
+    margin: 22px auto 0;
+    padding: 44px 26px 32px;
+    background-color: var(--paper);
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.8' numOctaves='2' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 .35 0 0 0 0 .27 0 0 0 0 .16 0 0 0 .09 0'/%3E%3C/filter%3E%3Crect width='160' height='160' filter='url(%23n)'/%3E%3C/svg%3E");
+    border: 1px solid var(--line);
+    border-radius: 3px 22px 3px 3px;
+    box-shadow: 0 1px 0 rgba(43,33,24,.06), 0 8px 22px -14px rgba(43,33,24,.35);
+  }
+  .wrap::before {
+    content: "";
+    position: absolute; inset: 9px;
+    border: 1px dashed var(--stitch);
+    border-radius: 1px 16px 1px 1px;
+    pointer-events: none;
+  }
+  .punch {
+    position: absolute; top: -13px; left: 34px;
+    width: 24px; height: 24px; border-radius: 50%;
+    background: var(--page);
+    border: 1px solid var(--line);
+    box-shadow: inset 0 1px 2px rgba(43,33,24,.18);
+  }
+  .punch::after { /* 通し紐 */
+    content: ""; position: absolute; left: 50%; top: 50%;
+    width: 2px; height: 54px; margin-left: -1px;
+    background: linear-gradient(var(--sub), var(--stitch));
+    transform: rotate(18deg); transform-origin: top; opacity: .55;
+  }
+
   .eyebrow {
-    font-family: var(--cond);
-    font-weight: 800;
+    font-family: var(--serif);
+    font-weight: 700;
     font-size: 0.7rem;
-    letter-spacing: 0.32em;
-    color: var(--ink);
+    letter-spacing: 0.34em;
+    color: var(--red);
     text-transform: uppercase;
   }
-  h1 { font-size: 2rem; margin: 14px 0 6px; font-weight: 800; letter-spacing: 0.06em; line-height: 1.2; }
-  .subtitle { font-size: 0.8rem; color: var(--sub); margin-bottom: 28px; line-height: 1.7; }
+  h1 {
+    font-family: var(--serif);
+    font-size: 1.9rem; font-weight: 800;
+    margin: 10px 0 6px; letter-spacing: 0.12em; line-height: 1.25;
+  }
+  .orn { display: flex; align-items: center; gap: 10px; color: var(--stitch); margin: 4px 0 8px; }
+  .orn::before, .orn::after { content: ""; flex: 1; height: 0; border-top: 1px solid var(--stitch); }
+  .orn i { width: 7px; height: 7px; background: var(--red); transform: rotate(45deg); }
+  .subtitle { font-size: 0.8rem; color: var(--sub); margin-bottom: 24px; line-height: 1.8; }
 
-  /* タブ(選択中を黒ベタ) */
-  .tabs { display: grid; grid-template-columns: repeat(3, 1fr); border: 1.5px solid var(--ink); margin-bottom: 8px; }
+  /* タブ */
+  .tabs { display: grid; grid-template-columns: repeat(3, 1fr); border: 1px solid var(--ink); margin-bottom: 6px; }
   .tab {
-    margin: 0;
-    padding: 14px 4px 12px;
-    background: var(--bg);
-    border: none;
-    border-right: 1.5px solid var(--ink);
-    border-radius: 0;
+    margin: 0; padding: 12px 4px 10px;
+    background: transparent; border: none; border-right: 1px solid var(--ink); border-radius: 0;
     color: var(--ink);
-    font-family: inherit;
-    font-size: 0.8rem;
-    font-weight: 700;
-    letter-spacing: 0.1em;
+    font-family: var(--serif); font-size: 0.82rem; font-weight: 700; letter-spacing: 0.14em;
     cursor: pointer;
-    display: flex; flex-direction: column; align-items: center; gap: 8px;
+    display: flex; flex-direction: column; align-items: center; gap: 7px;
   }
   .tab:last-child { border-right: none; }
-  .tab[aria-selected="true"] { background: var(--ink); color: var(--bg); }
+  .tab[aria-selected="true"] { background: var(--ink); color: var(--paper); }
   .tab svg { width: 36px; height: 28px; fill: none; stroke: currentColor; stroke-width: 1.6; stroke-linejoin: round; stroke-linecap: round; }
 
-  /* 入力(下線のみ) */
+  /* 入力 */
   label {
-    display: block;
-    font-size: 0.72rem;
-    font-weight: 700;
-    letter-spacing: 0.14em;
+    display: block; margin-top: 26px;
+    font-family: var(--serif); font-size: 0.78rem; font-weight: 700; letter-spacing: 0.12em;
     color: var(--sub);
-    margin-top: 28px;
   }
   input[type="number"], select {
-    width: 100%;
-    padding: 10px 0 9px;
-    font-size: 1.5rem; /* 16px以上: iOSの自動ズーム防止 */
-    font-weight: 700;
-    font-family: var(--cond);
+    width: 100%; padding: 9px 0 8px;
+    font-size: 1.55rem; font-weight: 700; font-family: var(--serif);
     font-variant-numeric: tabular-nums;
-    letter-spacing: 0.02em;
-    border: none;
-    border-bottom: 1.5px solid var(--ink);
-    border-radius: 0;
-    background: var(--bg);
-    color: var(--ink);
-    outline: none;
+    border: none; border-bottom: 1px solid var(--ink); border-radius: 0;
+    background: transparent; color: var(--ink); outline: none;
   }
-  input[type="number"]::placeholder { color: #c4c4c0; font-weight: 400; }
-  input[type="number"]:focus, select:focus { border-bottom-width: 4px; padding-bottom: 6px; }
+  input[type="number"]::placeholder { color: #bfb092; font-weight: 400; }
+  input[type="number"]:focus, select:focus { border-bottom: 3px solid var(--red); padding-bottom: 6px; }
   input[type="number"].invalid { border-bottom-color: var(--error); }
   select {
-    font-size: 1rem;
-    font-weight: 600;
-    font-family: inherit;
-    appearance: none;
-    -webkit-appearance: none;
-    padding-right: 28px;
-    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='14' height='9' viewBox='0 0 14 9'%3E%3Cpath d='M1 1l6 6 6-6' fill='none' stroke='%230d0d0d' stroke-width='1.8'/%3E%3C/svg%3E");
-    background-repeat: no-repeat;
-    background-position: right 2px center;
+    font-size: 1rem; font-weight: 600; appearance: none; -webkit-appearance: none; padding-right: 28px;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='14' height='9' viewBox='0 0 14 9'%3E%3Cpath d='M1 1l6 6 6-6' fill='none' stroke='%232b2118' stroke-width='1.8'/%3E%3C/svg%3E");
+    background-repeat: no-repeat; background-position: right 2px center;
   }
-  button:focus-visible { outline: 3px solid var(--ink); outline-offset: 3px; }
+  button:focus-visible { outline: 3px solid var(--red); outline-offset: 3px; }
   .error { display: none; margin-top: 16px; font-size: 0.85rem; font-weight: 700; color: var(--error); }
   .error.show { display: block; }
   .go {
-    margin-top: 36px;
-    width: 100%;
-    padding: 19px;
-    font-family: var(--cond);
-    font-size: 1rem;
-    font-weight: 800;
-    letter-spacing: 0.34em;
-    text-indent: 0.34em;
-    background: var(--ink);
-    color: var(--bg);
-    border: none;
-    border-radius: 0;
-    cursor: pointer;
+    margin-top: 34px; width: 100%; padding: 17px;
+    font-family: var(--serif); font-size: 1rem; font-weight: 800;
+    letter-spacing: 0.4em; text-indent: 0.4em;
+    background: var(--red); color: var(--paper);
+    border: none; border-radius: 2px; cursor: pointer;
+    box-shadow: inset 0 0 0 3px var(--red), inset 0 0 0 4px rgba(243,236,218,.6);
   }
-  .go::after { content: "  →"; letter-spacing: 0; }
-  .go:active { opacity: 0.8; }
+  .go:active { filter: brightness(.9); }
   .hidden { display: none; }
 
-  /* 結果(黒いハンドタグ) */
-  .result {
-    position: relative;
-    margin-top: 40px;
-    padding: 46px 24px 26px;
-    background: var(--ink);
-    color: var(--bg);
-    clip-path: polygon(0 0, calc(100% - 22px) 0, 100% 22px, 100% 100%, 0 100%);
-    display: none;
+  /* 結果 */
+  .result { margin-top: 34px; display: none; }
+  .result.show { display: block; }
+  .result .divider { display: flex; align-items: center; gap: 10px; color: var(--sub);
+    font-family: var(--serif); font-size: 0.7rem; letter-spacing: 0.3em; margin-bottom: 18px; }
+  .result .divider::before, .result .divider::after { content: ""; flex: 1; border-top: 3px double var(--ink); }
+  .result .label { font-family: var(--serif); font-size: 0.76rem; font-weight: 700; letter-spacing: 0.14em; color: var(--sub); text-align: center; }
+  .stamp-wrap { display: flex; justify-content: center; margin: 14px 0 22px; }
+  .stamp {
+    width: 132px; height: 132px; border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    font-family: var(--serif); font-weight: 900; font-size: 4.2rem; line-height: 1;
+    color: var(--red);
+    border: 4px double var(--red);
+    box-shadow: inset 0 0 0 5px var(--paper), inset 0 0 0 6px var(--red);
+    transform: rotate(-7deg);
+    filter: url(#rough);
+    mix-blend-mode: multiply;
   }
-  .result::before {
-    content: "";
-    position: absolute;
-    top: 16px; left: 24px;
-    width: 12px; height: 12px;
-    border-radius: 50%;
-    background: var(--bg);
+  .stamp[data-len="2"] { font-size: 3.2rem; }
+  .stamp[data-len="3"] { font-size: 2.5rem; }
+  .result.show .stamp { animation: slam .5s cubic-bezier(.2,.8,.2,1) both; }
+  @media (prefers-reduced-motion: reduce) { .result.show .stamp { animation: none; } }
+  @keyframes slam { 0% { opacity: 0; transform: rotate(-14deg) scale(1.7); } 60% { opacity: 1; transform: rotate(-6deg) scale(.96); } 100% { opacity: 1; transform: rotate(-7deg) scale(1); } }
+
+  /* 根拠ゲージ */
+  .gauge { margin: 6px 0 16px; }
+  .g-title { font-family: var(--serif); font-size: 0.74rem; font-weight: 700; letter-spacing: 0.14em; color: var(--sub); margin-bottom: 4px; }
+  .g-marker-row { position: relative; height: 38px; }
+  .g-marker {
+    position: absolute; bottom: 2px; transform: translateX(-50%);
+    display: flex; flex-direction: column; align-items: center;
+    font-family: var(--serif); font-weight: 800; font-size: 0.82rem; color: var(--red); white-space: nowrap;
   }
-  .result.show { display: flex; flex-direction: column; gap: 10px; }
-  .result.show .main-size { animation: rise 0.45s cubic-bezier(.2,.7,.2,1); }
-  @media (prefers-reduced-motion: reduce) { .result.show .main-size { animation: none; } }
-  @keyframes rise { from { opacity: 0; transform: translateY(14px); } to { opacity: 1; transform: translateY(0); } }
-  .result .label {
-    font-family: var(--cond);
-    font-size: 0.68rem;
-    font-weight: 700;
-    letter-spacing: 0.24em;
-    color: #a8a8a8;
+  .g-marker::after { content: ""; margin-top: 2px; border: 6px solid transparent; border-top: 8px solid var(--red); border-bottom: 0; }
+  .g-track { position: relative; display: flex; height: 36px; border: 1px solid var(--ink); background: rgba(255,255,255,.35); }
+  .g-seg {
+    display: flex; align-items: center; justify-content: center;
+    border-right: 1px solid var(--ink); font-family: var(--serif); font-weight: 800; font-size: 0.86rem; color: var(--sub);
   }
-  .result .main-size {
-    font-family: var(--cond);
-    font-size: 7rem;
-    font-weight: 900;
-    letter-spacing: -0.01em;
-    line-height: 0.95;
-    margin: 4px 0 6px;
-  }
-  .note { font-size: 0.88rem; line-height: 1.75; }
-  .note.alt { color: #a8a8a8; }
-  .fit-chips { display: none; gap: 8px; flex-wrap: wrap; margin-top: 4px; }
-  .chip {
-    display: flex; align-items: baseline; gap: 6px;
-    padding: 7px 14px;
-    border: 1px solid #5a5a5a;
-    border-radius: 999px;
-  }
-  .chip-primary { background: var(--bg); border-color: var(--bg); }
-  .chip-label { font-size: 0.74rem; color: #a8a8a8; letter-spacing: 0.03em; }
-  .chip-size { font-family: var(--cond); font-weight: 800; font-size: 0.95rem; color: var(--bg); }
-  .chip-primary .chip-label { color: #555; }
-  .chip-primary .chip-size { color: var(--ink); }
-  .scale { display: flex; gap: 6px; margin-top: 14px; }
-  .scale .cell {
-    flex: 1; text-align: center; padding: 10px 0;
-    border: 1px solid #5a5a5a;
-    color: #a8a8a8;
-    font-family: var(--cond);
-    font-weight: 800; font-size: 0.92rem;
-  }
-  .scale .cell.on { background: var(--bg); border-color: var(--bg); color: var(--ink); }
-  .scale .cell.alt { border: 1px dashed var(--bg); color: var(--bg); }
-  .scale-note { font-size: 0.74rem; color: #a8a8a8; }
+  .g-seg:last-child { border-right: none; }
+  .g-seg.on { background: var(--ink); color: var(--paper); }
+  .g-seg.alt { outline: 2px dashed var(--ink); outline-offset: -5px; color: var(--ink); }
+  .g-band { position: absolute; top: 0; bottom: 0; background: var(--ink); opacity: .9; }
+  .g-ticks { position: relative; height: 20px; margin-top: 5px; font-family: var(--serif); font-size: 0.72rem; color: var(--sub); }
+  .g-tick { position: absolute; transform: translateX(-50%); white-space: nowrap; }
+  .g-cap { font-size: 0.88rem; line-height: 1.8; margin-top: 6px; font-weight: 600; }
+  .note { font-size: 0.86rem; line-height: 1.85; margin-top: 8px; }
+  .note.alt { color: var(--sub); }
+  .fit-chips { display: none; gap: 8px; flex-wrap: wrap; margin-top: 12px; }
+  .chip { display: flex; align-items: baseline; gap: 6px; padding: 6px 13px; border: 1px solid var(--ink); border-radius: 999px; }
+  .chip-primary { background: var(--ink); }
+  .chip-label { font-size: 0.74rem; color: var(--sub); letter-spacing: 0.04em; }
+  .chip-size { font-family: var(--serif); font-weight: 800; font-size: 0.95rem; }
+  .chip-primary .chip-label { color: #cdbf9f; }
+  .chip-primary .chip-size { color: var(--paper); }
 
   /* ボトムスのウエスト位置 */
   .guide { margin-top: 18px; text-align: center; }
   .guide svg { display: block; width: 100%; max-width: 150px; height: auto; margin: 0 auto; }
-  .guide .g { fill: var(--bg); stroke: var(--ink); stroke-width: 1.5; stroke-linejoin: round; }
-  .guide .m { fill: none; stroke: #c0392b; stroke-width: 3; stroke-dasharray: 6 4; }
-  .guide .t { font-size: 24px; font-weight: 700; fill: #c0392b; text-anchor: middle; }
+  .guide .g { fill: var(--paper); stroke: var(--ink); stroke-width: 1.5; stroke-linejoin: round; }
+  .guide .m { fill: none; stroke: var(--red); stroke-width: 3; stroke-dasharray: 6 4; }
+  .guide .t { font-size: 24px; font-weight: 700; fill: var(--red); text-anchor: middle; font-family: var(--serif); }
 </style>
 </head>
 <body>
+<svg width="0" height="0" style="position:absolute" aria-hidden="true"><filter id="rough"><feTurbulence type="fractalNoise" baseFrequency="0.9" numOctaves="2" seed="4" result="n"/><feDisplacementMap in="SourceGraphic" in2="n" scale="2.2"/></filter></svg>
 <div class="wrap">
-  <div class="rule"></div>
+  <div class="punch"></div>
   <div class="eyebrow">Classic clothing — Size Guide</div>
   <h1>サイズ診断</h1>
+  <div class="orn"><i></i></div>
   <div class="subtitle">アイテムを選んで、おすすめのサイズをご案内します。</div>
 
   <div class="tabs" role="tablist" aria-label="アイテム">
@@ -236,13 +243,13 @@
   <button class="go" id="go">診断する</button>
 
   <div class="result" id="result" aria-live="polite">
+    <div class="divider">RESULT</div>
     <div class="label" id="resultLabel"></div>
-    <div class="main-size" id="mainSize"></div>
+    <div class="stamp-wrap"><div class="stamp" id="mainSize"></div></div>
+    <div class="gauge" id="gauge"></div>
     <div class="note" id="note"></div>
     <div class="note alt" id="altNote"></div>
     <div class="fit-chips" id="fitChips"></div>
-    <div class="scale" id="scale" aria-hidden="true"></div>
-    <div class="scale-note" id="scaleNote"></div>
   </div>
 </div>
 
@@ -331,9 +338,40 @@
   }
 
   // 診断結果(共通部分)を描画する
-  function render({ primary, note, usual, alt }) {
+  // 診断の根拠を示すゲージ(体重 or ウエストが目安のどこに入るか)
+  function gaugeHTML(g, primary, alt) {
+    const pct = (v, a, b) => Math.max(0, Math.min(100, (v - a) / (b - a) * 100));
+    if (g.kind === "weight") {
+      const A = 46, B = 94;
+      let prev = A, segs = "", ticks = "";
+      WEIGHT_CHART.forEach((row, i) => {
+        const to = row.weightMax === Infinity ? B : row.weightMax;
+        const cls = row.size === primary ? " on" : row.size === alt ? " alt" : "";
+        segs += `<div class="g-seg${cls}" style="width:${(to - prev) / (B - A) * 100}%">${row.size}</div>`;
+        if (row.weightMax !== Infinity) ticks += `<span class="g-tick" style="left:${pct(row.weightMax, A, B)}%">${row.weightMax}</span>`;
+        prev = to;
+      });
+      const pos = Math.max(6, Math.min(94, pct(g.value, A, B)));
+      const r = g.row, i = WEIGHT_CHART.indexOf(r);
+      const range = i === 0 ? `${r.weightMax}kg以下` : r.weightMax === Infinity ? `${WEIGHT_CHART[i - 1].weightMax}kg超` : `${WEIGHT_CHART[i - 1].weightMax}〜${r.weightMax}kg`;
+      return `<div class="g-title">体重 × サイズの目安</div>
+        <div class="g-marker-row"><div class="g-marker" style="left:${pos}%">あなた ${g.value}kg</div></div>
+        <div class="g-track">${segs}</div><div class="g-ticks">${ticks}</div>
+        <div class="g-cap">体重 ${g.value}kg は、${primary} の目安(${range})に入っています。</div>`;
+    }
+    const A = 66, B = 102, r = g.row;
+    const pos = Math.max(6, Math.min(94, pct(g.value, A, B)));
+    return `<div class="g-title">ウエスト × サイズの目安</div>
+      <div class="g-marker-row"><div class="g-marker" style="left:${pos}%">あなた ${g.value}cm</div></div>
+      <div class="g-track"><div class="g-band" style="left:${pct(r.waistMin, A, B)}%;width:${pct(r.waistMax, A, B) - pct(r.waistMin, A, B)}%"></div></div>
+      <div class="g-ticks"><span class="g-tick" style="left:${pct(r.waistMin, A, B)}%">${r.waistMin}</span><span class="g-tick" style="left:${pct(r.waistMax, A, B)}%">${r.waistMax}</span></div>
+      <div class="g-cap">${primary} の目安(${r.waistMin}〜${r.waistMax}cm)を黒帯で示しています。</div>`;
+  }
+
+  function render({ primary, note, usual, alt, gauge }) {
     $("resultLabel").textContent = TYPES[currentType].resultLabel;
     $("mainSize").textContent = primary;
+    $("mainSize").dataset.len = primary.length;
     $("note").textContent = note;
 
     const fitChips = $("fitChips");
@@ -362,9 +400,7 @@
     }
     $("altNote").textContent = altNote;
 
-    $("scale").innerHTML = SIZE_ORDER.map(sz =>
-      `<div class="cell${sz === primary ? " on" : sz === alt ? " alt" : ""}">${sz}</div>`).join("");
-    $("scaleNote").textContent = alt ? "点線は、着丈にゆとりが欲しい場合の候補です。" : "";
+    $("gauge").innerHTML = gaugeHTML(gauge, primary, alt);
     $("result").classList.add("show");
   }
 
@@ -380,7 +416,7 @@
       const note = inRange
         ? `ウエスト実寸(${waist}cm)は ${row.size} の目安範囲(${row.waistMin}〜${row.waistMax}cm)内です。`
         : `ウエスト実寸(${waist}cm)は ${row.size} の目安範囲(${row.waistMin}〜${row.waistMax}cm)からやや外れていますが、最も近いサイズとして ${row.size} を推奨します。`;
-      render({ primary: row.size, note, usual, alt: null });
+      render({ primary: row.size, note, usual, alt: null, gauge: { kind: "waist", value: waist, row } });
       return;
     }
 
@@ -397,7 +433,7 @@
     const note = (altSize && altSize !== primary)
       ? `体重(${weight}kg)からは ${primary} が基準ですが、身長(${height}cm)が ${primary} の目安上限(${row.heightMax}cm)を超えています。着丈にゆとりが欲しい場合は ${altSize} も候補です。`
       : `体重・身長ともに ${primary} の範囲内です。`;
-    render({ primary, note, usual, alt: (altSize && altSize !== primary) ? altSize : null });
+    render({ primary, note, usual, alt: (altSize && altSize !== primary) ? altSize : null, gauge: { kind: "weight", value: weight, row } });
   }
 
   document.querySelectorAll(".tab").forEach(t =>
